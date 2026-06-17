@@ -44,7 +44,6 @@ model User {
 model Category {
   id    String  @id @default(cuid())
   name  String
-  slug  String  @unique
   albums Album[]
 
   @@map("categories")
@@ -53,7 +52,6 @@ model Category {
 model Album {
   id           String      @id @default(cuid())
   title        String
-  slug         String      @unique
   description  String?
   year         Int?
   eventDate    DateTime?   @map("event_date")
@@ -114,7 +112,6 @@ model Photo {
 model Article {
   id           String      @id @default(cuid())
   title        String
-  slug         String      @unique
   summary      String?
   contentHtml  String      @map("content_html")
   coverPhotoId String?     @map("cover_photo_id")

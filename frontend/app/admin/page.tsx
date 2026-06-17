@@ -32,9 +32,21 @@ export default async function AdminDashboardPage() {
             <h3>{dictionary.admin.categoriesTitle}</h3>
             <p>{dictionary.admin.categoriesCopy}</p>
           </Link>
+          <Link className="admin-link-card" href="/admin/albums">
+            <h3>{dictionary.admin.albumsTitle}</h3>
+            <p>{dictionary.admin.albumsCopy}</p>
+          </Link>
+          <Link className="admin-link-card" href="/admin/photos">
+            <h3>{dictionary.admin.photosTitle}</h3>
+            <p>{dictionary.admin.photosCopy}</p>
+          </Link>
           <Link className="admin-link-card" href="/admin/articles">
             <h3>{dictionary.admin.articlesTitle}</h3>
             <p>{dictionary.admin.articlesCopy}</p>
+          </Link>
+          <Link className="admin-link-card" href="/admin/profile">
+            <h3>{dictionary.admin.profileTitle}</h3>
+            <p>{dictionary.admin.profileCopy}</p>
           </Link>
         </div>
       </section>

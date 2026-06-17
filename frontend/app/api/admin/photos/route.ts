@@ -28,3 +28,27 @@ export async function GET(request: Request) {
   const data = (await response.json().catch(() => ({ error: "Request failed" }))) as Record<string, unknown>;
   return NextResponse.json(data, { status: response.status });
 }
+
+export async function POST(request: Request) {
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get("pa_session")?.value;
+  const csrfToken = cookieStore.get("pa_csrf")?.value;
+
+  if (!sessionToken || !csrfToken) {
+    return NextResponse.json({ error: "Admin session not found" }, { status: 401 });
+  }
+
+  const formData = await request.formData();
+  const response = await fetch(`${apiBaseUrl}/photos/upload`, {
+    method: "POST",
+    headers: {
+      "x-csrf-token": csrfToken,
+      cookie: `pa_session=${sessionToken}; pa_csrf=${csrfToken}`
+    },
+    body: formData,
+    cache: "no-store"
+  });
+
+  const data = (await response.json().catch(() => ({ error: "Request failed" }))) as Record<string, unknown>;
+  return NextResponse.json(data, { status: response.status });
+}

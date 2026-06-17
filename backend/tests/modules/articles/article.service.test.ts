@@ -25,8 +25,7 @@ describe("article service", () => {
         publishedAt = input.publishedAt;
 
         return {
-          id: "article-1",
-          slug: "archive-story"
+          id: "article-1"
         };
       }
     };
@@ -38,7 +37,6 @@ describe("article service", () => {
     await service.create(
       {
         title: "Archive story",
-        slug: "archive-story",
         summary: "Summary",
         contentHtml: "<script>alert('x')</script><p>Safe</p>",
         visibility: "public",

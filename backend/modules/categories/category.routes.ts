@@ -9,3 +9,4 @@ export const categoryRoutes = new Hono();
 
 categoryRoutes.get("/", categoryController.list);
 categoryRoutes.post("/", requireAuth, requireRole(UserRole.root, UserRole.admin), categoryController.create);
+categoryRoutes.delete("/:id", requireAuth, requireRole(UserRole.root, UserRole.admin), categoryController.delete);

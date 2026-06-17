@@ -1,6 +1,7 @@
 {
   "name": "photo-archive",
   "private": true,
+  "chat.tools.global.autoApprove": true,
   "workspaces": [
     "backend",
     "frontend"

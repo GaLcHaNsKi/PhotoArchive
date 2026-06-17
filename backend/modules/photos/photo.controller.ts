@@ -44,8 +44,8 @@ export class PhotoController {
     return c.json({ photo }, 201);
   };
 
-  listPublicByAlbumSlug = async (c: any) => {
-    const items = await photoService.listPublicByAlbumSlug(c.req.param("slug"));
+  listPublicByAlbumId = async (c: any) => {
+    const items = await photoService.listPublicByAlbumId(c.req.param("albumId"));
     return c.json({ items });
   };
 
@@ -53,6 +53,13 @@ export class PhotoController {
     const query = parseOrThrow(photoAdminOptionsQuerySchema, c.req.query());
     const items = await photoService.listAdminOptionsByAlbumId(query.albumId);
     return c.json({ items });
+  };
+
+  delete = async (c: any) => {
+    const auth = c.get("auth") as AuthContext;
+    const id = c.req.param("id") as string;
+    await photoService.delete(id, auth.userId);
+    return c.json({ success: true });
   };
 }
 

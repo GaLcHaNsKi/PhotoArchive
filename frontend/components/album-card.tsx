@@ -16,7 +16,7 @@ type Props = {
 
 export function AlbumCard({ album, labels }: Props) {
   return (
-    <Link className="album-card" href={`/albums/${album.slug}`}>
+    <Link className="album-card" href={`/albums/${album.id}`}>
       <div className="album-art">
         {album.coverPhoto ? (
           <img alt={album.title} loading="lazy" src={mediaUrl(album.coverPhoto.thumbnailPath)} />

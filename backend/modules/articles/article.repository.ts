@@ -22,7 +22,6 @@ export class ArticleRepository {
 
   async create(input: {
     title: string;
-    slug: string;
     summary?: string;
     contentHtml: string;
     coverPhotoId?: string;
@@ -37,7 +36,6 @@ export class ArticleRepository {
       const article = await tx.article.create({
         data: {
           title: input.title,
-          slug: input.slug,
           summary: input.summary,
           contentHtml: input.contentHtml,
           coverPhotoId: input.coverPhotoId,
@@ -98,10 +96,10 @@ export class ArticleRepository {
     });
   }
 
-  findPublicBySlug(slug: string) {
+  findPublicById(id: string) {
     return prisma.article.findFirst({
       where: {
-        slug,
+        id,
         deletedAt: null,
         visibility: Visibility.public
       },
@@ -113,6 +111,61 @@ export class ArticleRepository {
           orderBy: { createdAt: "asc" }
         }
       }
+    });
+  }
+
+  listAdmin() {
+    return prisma.article.findMany({
+      where: { deletedAt: null },
+      include: {
+        coverPhoto: true,
+        album: true
+      },
+      orderBy: [{ createdAt: "desc" }]
+    });
+  }
+
+  findById(id: string) {
+    return prisma.article.findFirst({ where: { id, deletedAt: null } });
+  }
+
+  update(id: string, data: Partial<{
+    title: string;
+    summary: string | undefined;
+    contentHtml: string;
+    coverPhotoId: string | undefined;
+    albumId: string | undefined;
+    tags: string[];
+    visibility: Visibility;
+    publishedAt: Date | undefined;
+  }>, photoIds?: string[]) {
+    return prisma.$transaction(async (tx) => {
+      if (photoIds !== undefined) {
+        await tx.photo.updateMany({
+          where: { articleId: id },
+          data: { articleId: null }
+        });
+
+        if (photoIds.length > 0) {
+          await tx.photo.updateMany({
+            where: { id: { in: photoIds } },
+            data: { articleId: id }
+          });
+        }
+      }
+
+      return tx.article.update({
+        where: { id },
+        data,
+        include: { coverPhoto: true, album: true, photos: { where: { deletedAt: null, status: "ready" } } }
+      });
+    });
+  }
+
+  softDelete(id: string) {
+    return prisma.article.update({
+      where: { id },
+      data: { deletedAt: new Date() }
     });
   }
 }

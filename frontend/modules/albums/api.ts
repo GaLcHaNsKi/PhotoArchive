@@ -9,4 +9,4 @@ export const fetchAlbums = (search?: string) => {
   return apiFetch<AlbumListResponse>(`/albums${query}`);
 };
 
-export const fetchAlbum = (slug: string) => apiFetch<AlbumDetailResponse>(`/albums/${slug}`);
+export const fetchAlbum = (id: string) => apiFetch<AlbumDetailResponse>(`/albums/${id}`);

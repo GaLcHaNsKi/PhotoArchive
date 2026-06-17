@@ -6,7 +6,6 @@ import { useEffect, useState, useTransition } from "react";
 type AlbumOption = {
   id: string;
   title: string;
-  slug: string;
   visibility: "public" | "private";
   _count?: { photos: number };
 };
@@ -25,7 +24,6 @@ const splitCsv = (value: string) =>
 type Props = {
   labels: {
     fieldTitle: string;
-    fieldSlug: string;
     fieldSummary: string;
     fieldContentHtml: string;
     fieldVisibility: string;
@@ -39,7 +37,6 @@ type Props = {
     fieldLinkedPhotos: string;
     pickAlbumHint: string;
     titlePlaceholder: string;
-    slugPlaceholder: string;
     summaryPlaceholder: string;
     contentPlaceholder: string;
     tagsPlaceholder: string;
@@ -154,7 +151,6 @@ export function AdminArticleForm({ labels }: Props) {
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
               title: String(form.get("title") ?? ""),
-              slug: String(form.get("slug") ?? ""),
               summary: String(form.get("summary") ?? "") || undefined,
               contentHtml: String(form.get("contentHtml") ?? ""),
               visibility: String(form.get("visibility") ?? "private"),
@@ -185,10 +181,6 @@ export function AdminArticleForm({ labels }: Props) {
       <label>
         <span>{labels.fieldTitle}</span>
         <input name="title" placeholder={labels.titlePlaceholder} required type="text" />
-      </label>
-      <label>
-        <span>{labels.fieldSlug}</span>
-        <input name="slug" placeholder={labels.slugPlaceholder} pattern="[a-z0-9-]+" required type="text" />
       </label>
       <label>
         <span>{labels.fieldSummary}</span>

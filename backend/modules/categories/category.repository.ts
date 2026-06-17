@@ -1,7 +1,7 @@
 import { prisma } from "@src/lib/prisma";
 
 export class CategoryRepository {
-  create(input: { name: string; slug: string }) {
+  create(input: { name: string }) {
     return prisma.category.create({
       data: input,
       include: {
@@ -21,5 +21,13 @@ export class CategoryRepository {
         }
       }
     });
+  }
+
+  findById(id: string) {
+    return prisma.category.findUnique({ where: { id } });
+  }
+
+  softDelete(id: string) {
+    return prisma.category.delete({ where: { id } });
   }
 }

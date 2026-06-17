@@ -5,22 +5,22 @@ import { createApp } from "@src/app";
 
 import { createBearerToken, withCsrf } from "../helpers/http-test-helpers";
 
-const restoreListPublicByAlbumSlug = photoService.listPublicByAlbumSlug;
+const restoreListPublicByAlbumId = photoService.listPublicByAlbumId;
 const restoreUpload = photoService.upload;
 const restoreListAdminOptionsByAlbumId = photoService.listAdminOptionsByAlbumId;
 
 afterEach(() => {
-  photoService.listPublicByAlbumSlug = restoreListPublicByAlbumSlug;
+  photoService.listPublicByAlbumId = restoreListPublicByAlbumId;
   photoService.upload = restoreUpload;
   photoService.listAdminOptionsByAlbumId = restoreListAdminOptionsByAlbumId;
 });
 
 describe("photo routes", () => {
-  test("GET /api/v1/photos/album/:slug returns photos", async () => {
-    photoService.listPublicByAlbumSlug = (async () => [{ id: "photo-1", title: "Image" }]) as unknown as typeof photoService.listPublicByAlbumSlug;
+  test("GET /api/v1/photos/album/:albumId returns photos", async () => {
+    photoService.listPublicByAlbumId = (async () => [{ id: "photo-1", title: "Image" }]) as unknown as typeof photoService.listPublicByAlbumId;
 
     const app = createApp();
-    const response = await app.request("/api/v1/photos/album/archive");
+    const response = await app.request("/api/v1/photos/album/album-1");
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual({ items: [{ id: "photo-1", title: "Image" }] });

@@ -14,7 +14,7 @@ type Props = {
 
 export function ArticleCard({ article, labels }: Props) {
   return (
-    <Link className="article-card" href={`/articles/${article.slug}`}>
+    <Link className="article-card" href={`/articles/${article.id}`}>
       <div className="article-art">
         {article.coverPhoto ? (
           <img alt={article.title} loading="lazy" src={mediaUrl(article.coverPhoto.thumbnailPath)} />

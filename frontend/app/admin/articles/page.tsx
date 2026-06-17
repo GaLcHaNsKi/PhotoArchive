@@ -1,13 +1,11 @@
 import { AdminArticleForm } from "@components/admin-article-form";
-import { ArticleCard } from "@components/article-card";
-import { fetchArticles } from "@modules/articles/api";
+import { AdminArticlesList } from "@components/admin-articles-list";
 import { getI18n } from "@modules/i18n/server";
 import { requireAdminUser } from "@modules/admin/session";
 
 export default async function AdminArticlesPage() {
   const { dictionary } = await getI18n();
   await requireAdminUser();
-  const { items } = await fetchArticles();
 
   return (
     <main className="page-content">
@@ -19,12 +17,7 @@ export default async function AdminArticlesPage() {
           <AdminArticleForm labels={dictionary.adminArticles} />
         </div>
         <div className="admin-side-panel">
-          <h2>{dictionary.adminArticles.latestPublic}</h2>
-          <div className="article-stack">
-            {items.map((article) => (
-              <ArticleCard article={article} key={article.id} labels={dictionary.articleCard} />
-            ))}
-          </div>
+          <AdminArticlesList labels={dictionary.adminArticles} />
         </div>
       </section>
     </main>

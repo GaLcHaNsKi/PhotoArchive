@@ -19,4 +19,4 @@ export const fetchArticles = (search?: string, tag?: string) => {
   return apiFetch<ArticleListResponse>(`/articles${query}`);
 };
 
-export const fetchArticle = (slug: string) => apiFetch<ArticleDetailResponse>(`/articles/${slug}`);
+export const fetchArticle = (id: string) => apiFetch<ArticleDetailResponse>(`/articles/${id}`);

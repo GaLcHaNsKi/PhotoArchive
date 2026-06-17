@@ -9,5 +9,8 @@ export const albumRoutes = new Hono();
 
 albumRoutes.get("/", albumController.listPublic);
 albumRoutes.get("/admin/options", requireAuth, requireRole(UserRole.root, UserRole.admin), albumController.listAdminOptions);
-albumRoutes.get("/:slug", albumController.getPublicBySlug);
+albumRoutes.get("/admin", requireAuth, requireRole(UserRole.root, UserRole.admin), albumController.listAdmin);
+albumRoutes.get("/:id", albumController.getPublicById);
 albumRoutes.post("/", requireAuth, requireRole(UserRole.root, UserRole.admin), albumController.create);
+albumRoutes.put("/:id", requireAuth, requireRole(UserRole.root, UserRole.admin), albumController.update);
+albumRoutes.delete("/:id", requireAuth, requireRole(UserRole.root, UserRole.admin), albumController.delete);

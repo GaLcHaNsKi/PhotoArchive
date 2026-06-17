@@ -6,13 +6,11 @@ import { useState, useTransition } from "react";
 type Props = {
   labels: {
     name: string;
-    slug: string;
     create: string;
     saving: string;
     created: string;
     failed: string;
     namePlaceholder: string;
-    slugPlaceholder: string;
   };
 };
 
@@ -37,8 +35,7 @@ export function AdminCategoryForm({ labels }: Props) {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
-              name: String(form.get("name") ?? ""),
-              slug: String(form.get("slug") ?? "")
+              name: String(form.get("name") ?? "")
             })
           });
 
@@ -57,10 +54,6 @@ export function AdminCategoryForm({ labels }: Props) {
       <label>
         <span>{labels.name}</span>
         <input name="name" placeholder={labels.namePlaceholder} required type="text" />
-      </label>
-      <label>
-        <span>{labels.slug}</span>
-        <input name="slug" placeholder={labels.slugPlaceholder} pattern="[a-z0-9-]+" required type="text" />
       </label>
       <button disabled={isPending} type="submit">
         {isPending ? labels.saving : labels.create}

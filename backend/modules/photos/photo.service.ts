@@ -65,12 +65,31 @@ export class PhotoService {
     }
   }
 
-  listPublicByAlbumSlug(slug: string) {
-    return this.photoRepository.findPublicByAlbumSlug(slug);
+  listPublicByAlbumId(albumId: string) {
+    return this.photoRepository.findPublicByAlbumId(albumId);
   }
 
   listAdminOptionsByAlbumId(albumId: string) {
     return this.photoRepository.listAdminOptionsByAlbumId(albumId);
+  }
+
+  async delete(id: string, userId: string) {
+    const photo = await this.photoRepository.findById(id);
+
+    if (!photo) {
+      throw new HttpError(404, "Photo not found");
+    }
+
+    await this.photoRepository.softDelete(id);
+
+    await auditLogService.write({
+      timestamp: new Date().toISOString(),
+      userId,
+      action: "photo.delete",
+      entityType: "photo",
+      entityId: id,
+      metadata: {}
+    });
   }
 }
 

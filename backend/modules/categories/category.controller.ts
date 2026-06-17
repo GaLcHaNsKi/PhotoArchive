@@ -15,6 +15,13 @@ export class CategoryController {
     const category = await categoryService.create(payload, auth.userId);
     return c.json({ category }, 201);
   };
+
+  delete = async (c: any) => {
+    const auth = c.get("auth") as AuthContext;
+    const id = c.req.param("id") as string;
+    await categoryService.delete(id, auth.userId);
+    return c.json({ success: true });
+  };
 }
 
 export const categoryController = new CategoryController();

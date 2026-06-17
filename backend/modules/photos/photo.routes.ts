@@ -7,6 +7,7 @@ import { UserRole } from "@prisma/client";
 
 export const photoRoutes = new Hono();
 
-photoRoutes.get("/album/:slug", photoController.listPublicByAlbumSlug);
+photoRoutes.get("/album/:albumId", photoController.listPublicByAlbumId);
 photoRoutes.get("/admin/options", requireAuth, requireRole(UserRole.root, UserRole.admin), photoController.listAdminOptions);
 photoRoutes.post("/upload", requireAuth, photoController.upload);
+photoRoutes.delete("/:id", requireAuth, requireRole(UserRole.root, UserRole.admin), photoController.delete);

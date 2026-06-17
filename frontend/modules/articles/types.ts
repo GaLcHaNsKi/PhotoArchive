@@ -3,13 +3,12 @@ import type { PhotoAsset } from "@modules/albums/types";
 export type ArticleSummary = {
   id: string;
   title: string;
-  slug: string;
   summary: string | null;
   contentHtml?: string;
   tags: string[];
   createdAt?: string;
   publishedAt?: string | null;
-  album: { id: string; title: string; slug: string } | null;
+  album: { id: string; title: string } | null;
   coverPhoto: PhotoAsset | null;
 };
 

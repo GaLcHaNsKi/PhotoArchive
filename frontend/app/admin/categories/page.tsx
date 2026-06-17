@@ -1,4 +1,5 @@
 import { AdminCategoryForm } from "@components/admin-category-form";
+import { AdminCategoryDeleteButton } from "@components/admin-category-delete-button";
 import { fetchCategories } from "@modules/categories/api";
 import { getI18n } from "@modules/i18n/server";
 import { requireAdminUser } from "@modules/admin/session";
@@ -24,10 +25,21 @@ export default async function AdminCategoriesPage() {
               <div className="category-row" key={category.id}>
                 <div>
                   <strong>{category.name}</strong>
-                  <p>{category.slug}</p>
                 </div>
-                <span>
-                  {category._count?.albums ?? 0} {dictionary.adminCategories.albumsSuffix}
+                <span className="admin-inline-actions">
+                  <span>
+                    {category._count?.albums ?? 0} {dictionary.adminCategories.albumsSuffix}
+                  </span>
+                  <AdminCategoryDeleteButton
+                    categoryId={category.id}
+                    labels={{
+                      delete: dictionary.adminCategories.delete,
+                      confirm: dictionary.adminCategories.confirm,
+                      cancel: dictionary.adminCategories.cancel,
+                      deleting: dictionary.adminCategories.deleting,
+                      failed: dictionary.adminCategories.deleteFailed
+                    }}
+                  />
                 </span>
               </div>
             ))}

@@ -67,13 +67,13 @@ export class PhotoRepository {
     });
   }
 
-  findPublicByAlbumSlug(slug: string) {
+  findPublicByAlbumId(albumId: string) {
     return prisma.photo.findMany({
       where: {
         deletedAt: null,
         status: PhotoStatus.ready,
         album: {
-          slug,
+          id: albumId,
           visibility: "public",
           deletedAt: null
         }
@@ -97,6 +97,17 @@ export class PhotoRepository {
         createdAt: true
       },
       orderBy: { createdAt: "desc" }
+    });
+  }
+
+  findById(id: string) {
+    return prisma.photo.findFirst({ where: { id, deletedAt: null } });
+  }
+
+  softDelete(id: string) {
+    return prisma.photo.update({
+      where: { id },
+      data: { deletedAt: new Date() }
     });
   }
 }

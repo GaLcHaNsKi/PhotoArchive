@@ -10,6 +10,7 @@ type Props = {
     signIn: string;
     signingIn: string;
     loginFailed: string;
+    usernamePlaceholder: string;
   };
 };
 
@@ -49,7 +50,7 @@ export function LoginForm({ labels }: Props) {
     <form className="login-form" onSubmit={handleSubmit}>
       <label>
         <span>{labels.username}</span>
-        <input name="username" placeholder="archive-admin" required type="text" />
+        <input name="username" placeholder={labels.usernamePlaceholder} required type="text" />
       </label>
       <label>
         <span>{labels.password}</span>

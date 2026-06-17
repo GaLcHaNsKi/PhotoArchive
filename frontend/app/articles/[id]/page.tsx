@@ -7,10 +7,10 @@ import { getI18n } from "@modules/i18n/server";
 
 export const dynamic = "force-dynamic";
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { dictionary } = await getI18n();
-  const { slug } = await params;
-  const { article } = await fetchArticle(slug);
+  const { id } = await params;
+  const { article } = await fetchArticle(id);
 
   return (
     <main className="page-content">

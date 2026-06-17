@@ -18,6 +18,13 @@ export class UserRepository {
     });
   }
 
+  findByIdWithHash(userId: string) {
+    return prisma.user.findUnique({
+      where: { id: userId },
+      select: { ...userSelect, passwordHash: true }
+    });
+  }
+
   findByUsername(username: string) {
     return prisma.user.findUnique({
       where: { username },
@@ -34,6 +41,22 @@ export class UserRepository {
         isActive: true
       },
       select: userSelect
+    });
+  }
+
+  updatePasswordHash(userId: string, passwordHash: string) {
+    return prisma.user.update({
+      where: { id: userId },
+      data: { passwordHash },
+      select: userSelect
+    });
+  }
+
+  listAdmins() {
+    return prisma.user.findMany({
+      where: { role: "admin", isActive: true },
+      select: userSelect,
+      orderBy: { username: "asc" }
     });
   }
 }

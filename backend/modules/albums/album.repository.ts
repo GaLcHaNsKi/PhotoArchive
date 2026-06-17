@@ -6,7 +6,6 @@ import { prisma } from "@src/lib/prisma";
 export class AlbumRepository {
   async create(input: {
     title: string;
-    slug: string;
     description?: string;
     year?: number;
     eventDate?: Date;
@@ -59,10 +58,10 @@ export class AlbumRepository {
     });
   }
 
-  findPublicBySlug(slug: string) {
+  findPublicById(id: string) {
     return prisma.album.findFirst({
       where: {
-        slug,
+        id,
         visibility: Visibility.public,
         deletedAt: null
       },
@@ -85,11 +84,50 @@ export class AlbumRepository {
       select: {
         id: true,
         title: true,
-        slug: true,
         visibility: true,
         _count: { select: { photos: true } }
       },
       orderBy: [{ createdAt: "desc" }]
+    });
+  }
+
+  listAdmin() {
+    return prisma.album.findMany({
+      where: { deletedAt: null },
+      include: {
+        category: true,
+        _count: { select: { photos: true } }
+      },
+      orderBy: [{ createdAt: "desc" }]
+    });
+  }
+
+  findById(id: string) {
+    return prisma.album.findFirst({ where: { id, deletedAt: null } });
+  }
+
+  update(id: string, data: Partial<{
+    title: string;
+    description: string | undefined;
+    year: number | undefined;
+    eventDate: Date | undefined;
+    visibility: Visibility;
+    categoryId: string | undefined;
+    tags: string[];
+    coverPhotoId: string | undefined;
+    publishedAt: Date | undefined;
+  }>) {
+    return prisma.album.update({
+      where: { id },
+      data,
+      include: { category: true, coverPhoto: true }
+    });
+  }
+
+  softDelete(id: string) {
+    return prisma.album.update({
+      where: { id },
+      data: { deletedAt: new Date() }
     });
   }
 }
