@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum UserRole {
+  root
+  admin
+}
+
+enum Visibility {
+  public
+  private
+}
+
+enum PhotoStatus {
+  uploading
+  processing
+  ready
+  failed
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  passwordHash  String    @map("password_hash")
+  role          UserRole
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  lastLoginAt   DateTime? @map("last_login_at")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAlbums Album[]   @relation("AlbumCreator")
+  uploadedPhotos Photo[]  @relation("PhotoUploader")
+  createdArticles Article[] @relation("ArticleCreator")
+
+  @@map("users")
+}
+
+model Category {
+  id    String  @id @default(cuid())
+  name  String
+  slug  String  @unique
+  albums Album[]
+
+  @@map("categories")
+}
+
+model Album {
+  id           String      @id @default(cuid())
+  title        String
+  slug         String      @unique
+  description  String?
+  year         Int?
+  eventDate    DateTime?   @map("event_date")
+  visibility   Visibility  @default(private)
+  categoryId   String?     @map("category_id")
+  tags         String[]    @default([])
+  coverPhotoId String?     @map("cover_photo_id")
+  createdBy    String      @map("created_by")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  publishedAt  DateTime?   @map("published_at")
+  deletedAt    DateTime?   @map("deleted_at")
+  category     Category?   @relation(fields: [categoryId], references: [id])
+  coverPhoto   Photo?      @relation("AlbumCoverPhoto", fields: [coverPhotoId], references: [id])
+  creator      User        @relation("AlbumCreator", fields: [createdBy], references: [id])
+  photos       Photo[]     @relation("AlbumPhotos")
+  articles     Article[]
+
+  @@index([categoryId])
+  @@index([createdBy])
+  @@index([visibility, publishedAt])
+  @@map("albums")
+}
+
+model Photo {
+  id               String      @id @default(cuid())
+  albumId          String?     @map("album_id")
+  articleId        String?     @map("article_id")
+  title            String
+  description      String?
+  originalPath     String      @map("original_path")
+  previewPath      String      @map("preview_path")
+  thumbnailPath    String      @map("thumbnail_path")
+  originalFilename String      @map("original_filename")
+  mimeType         String      @map("mime_type")
+  sizeBytes        BigInt      @map("size_bytes")
+  width            Int?
+  height           Int?
+  sha256           String      @unique
+  status           PhotoStatus @default(uploading)
+  uploadedBy       String      @map("uploaded_by")
+  takenAt          DateTime?   @map("taken_at")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  deletedAt        DateTime?   @map("deleted_at")
+  album            Album?      @relation("AlbumPhotos", fields: [albumId], references: [id])
+  article          Article?    @relation("ArticlePhotos", fields: [articleId], references: [id])
+  uploader         User        @relation("PhotoUploader", fields: [uploadedBy], references: [id])
+  albumCoverFor    Album[]     @relation("AlbumCoverPhoto")
+  articleCoverFor  Article[]   @relation("ArticleCoverPhoto")
+
+  @@index([albumId])
+  @@index([articleId])
+  @@index([uploadedBy])
+  @@index([status, createdAt])
+  @@map("photos")
+}
+
+model Article {
+  id           String      @id @default(cuid())
+  title        String
+  slug         String      @unique
+  summary      String?
+  contentHtml  String      @map("content_html")
+  coverPhotoId String?     @map("cover_photo_id")
+  albumId      String?     @map("album_id")
+  tags         String[]    @default([])
+  visibility   Visibility  @default(private)
+  createdBy    String      @map("created_by")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  publishedAt  DateTime?   @map("published_at")
+  deletedAt    DateTime?   @map("deleted_at")
+  album        Album?      @relation(fields: [albumId], references: [id])
+  coverPhoto   Photo?      @relation("ArticleCoverPhoto", fields: [coverPhotoId], references: [id])
+  creator      User        @relation("ArticleCreator", fields: [createdBy], references: [id])
+  photos       Photo[]     @relation("ArticlePhotos")
+
+  @@index([albumId])
+  @@index([createdBy])
+  @@index([visibility, publishedAt])
+  @@map("articles")
+}
